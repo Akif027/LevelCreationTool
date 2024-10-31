@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 877c97241561b2947abdc38496763aed, type: 3}
+  m_Name: Ground
+  m_EditorClassIdentifier: 
+  environmentName: Ground
+  icon: {fileID: 21300000, guid: 7f0988de9fdfe8b478d207ffae1489c2, type: 3}
+  prefab: {fileID: 3173711268049424937, guid: 384c435eded334345854f19df8450ae4, type: 3}
+  environmentType: 0
