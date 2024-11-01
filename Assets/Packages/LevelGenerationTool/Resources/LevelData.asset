@@ -12,10 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e415bd751bc494843bcaa5bde4d9ade2, type: 3}
   m_Name: LevelData
   m_EditorClassIdentifier: 
+  levelName: Level 1
+  words:
+  - {fileID: 11400000, guid: 938092eaa91630d45b7c781c359fa7db, type: 2}
+  - {fileID: 11400000, guid: 25fba8af9d368ae45a7eb62cadb1b8e8, type: 2}
+  correctWords:
+  - {fileID: 11400000, guid: 25fba8af9d368ae45a7eb62cadb1b8e8, type: 2}
+  backgroundImg: {fileID: -4364034832326165938, guid: 83c49b38227a79345a3a1b794a2c2831, type: 3}
+  questionText: fbhnvbn
+  wordButtonPrefab: {fileID: 1089305154806629969, guid: d9069033110cdb044984b41adae6a591, type: 3}
+  animatedScenePrefab: {fileID: 0}
+  successAnimations: []
   environmentOptions:
   - {fileID: 11400000, guid: 2143206656be022448c197502fb652ae, type: 2}
   - {fileID: 11400000, guid: afc7cd87cc29368488a4ef984f6dcfdb, type: 2}
-  placedEnvironments:
-  - environmentData: {fileID: 11400000, guid: 2143206656be022448c197502fb652ae, type: 2}
-    position: {x: 1.2309526, y: 0.11271609, z: 0}
-    rotation: {x: -0, y: -0, z: -0, w: 1}
+  - {fileID: 11400000, guid: 089b8f41c9f02a04daef4c69ebd6d1ca, type: 2}
+  - {fileID: 11400000, guid: 7626b36b1a84a704bb5b1dd4c59e71b3, type: 2}
+  - {fileID: 11400000, guid: 60085cabfcb3efa469df5eb824380cad, type: 2}
+  - {fileID: 11400000, guid: c03fa7f7986bf844c88101700eb34a24, type: 2}
+  - {fileID: 11400000, guid: 337816d94f543424ba1c45d11d215a57, type: 2}
+  placedEnvironments: []
