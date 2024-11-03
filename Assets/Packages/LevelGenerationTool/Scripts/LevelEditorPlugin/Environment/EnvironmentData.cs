@@ -1,11 +1,7 @@
-using UnityEngine;
-
 namespace LevelEditorPlugin.Runtime
 {
-    /// <summary>
-    /// A ScriptableObject that stores data for individual environment objects,
-    /// such as ground, obstacle, decoration, or water elements.
-    /// </summary>
+    using UnityEngine;
+
     [CreateAssetMenu(fileName = "NewEnvironmentData", menuName = "Environment/Environment Data")]
     public class EnvironmentData : ScriptableObject
     {
@@ -23,10 +19,7 @@ namespace LevelEditorPlugin.Runtime
         public EnvironmentType environmentType;
     }
 
-    /// <summary>
-    /// Enum representing the various types of environment elements, such as
-    /// Ground, Obstacle, Decoration, and Water.
-    /// </summary>
+    // Enum representing the various types of environment elements.
     public enum EnvironmentType
     {
         Ground,
