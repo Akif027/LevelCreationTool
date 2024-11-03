@@ -1,37 +1,89 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewLevelData", menuName = "Level/Level Data")]
 public class LevelData : ScriptableObject
 {
-    public string levelName;  // Name of the level
+    [Header("Level Information")]
+    public int levelNum;
+    public string levelName;
+    public Sprite backgroundImg;
 
-    // Words and Correct Answers
-    public List<string> words = new List<string>(); // List of all possible words
-    public List<string> correctWords = new List<string>(); // List of correct words
+    [Header("Question and Words")]
+    public string questionText;
+    public List<string> words = new List<string>();
+    public List<string> correctWords = new List<string>();
 
-    // Background and Question
-    public Sprite backgroundImg;  // Background image for the level
-    public string questionText;  // Question text for the level
+    [Header("Prefabs and Effects")]
+    public GameObject wordButtonPrefab;
+    public GameObject animatedScenePrefab;
+    public bool animatedSceneOnCompletion = true;
+    public AnimationClip[] successAnimations;
 
-    // WordButton prefab reference
-    public GameObject wordButtonPrefab;  // Reference to the WordButton prefab
 
-    // Animated Scene and Success Animations
-    public GameObject animatedScenePrefab;  // Reference to animated scene or GIF as a prefab
-    public bool animatedSceneOnCompletion = true;  // Toggle for triggering animated scene on completion
-    public AnimationClip[] successAnimations;  // Actions/animations triggered when the level is solved
-    public GameObject successPrefab;  // The prefab to instantiate on level success
-    // Environment Data
-    public EnvironmentData[] environmentOptions;  // Available environment types for this level
-    public List<PlacedEnvironment> placedEnvironments = new List<PlacedEnvironment>();  // List of placed environments
+    [Header("Environment Settings")]
+    public EnvironmentData[] environmentOptions;
+    public List<PlacedEnvironment> placedEnvironments = new List<PlacedEnvironment>();
 
-    // Class to represent placed environments in the level
     [System.Serializable]
     public class PlacedEnvironment
     {
-        public EnvironmentData environmentData;  // The environment data used
-        public Vector3 position;  // Position where it was placed
-        public Quaternion rotation;  // Rotation of the placed element
+        public EnvironmentData environmentData;
+        public Vector3 position;
+        public Quaternion rotation;
     }
+
+    [Header("Particle Effects")]
+    public List<ParticleEntry> particlePrefabs = new List<ParticleEntry>();
+    private Dictionary<string, GameObject> particleDictionary;
+
+    [System.Serializable]
+    public class ParticleEntry
+    {
+        public string name;
+        public GameObject prefab;
+    }
+
+    [Header("Sound Effects")]
+    public List<SoundEntry> soundEffects = new List<SoundEntry>();
+    private Dictionary<string, AudioClip> soundDictionary;
+
+    [System.Serializable]
+    public class SoundEntry
+    {
+        public string name;
+        public AudioClip clip;
+    }
+
+    private void OnEnable()
+    {
+        InitializeDictionaries();
+    }
+
+    private void InitializeDictionaries()
+    {
+        particleDictionary = new Dictionary<string, GameObject>();
+        foreach (var entry in particlePrefabs)
+        {
+            if (!particleDictionary.ContainsKey(entry.name) && entry.prefab != null)
+            {
+                particleDictionary.Add(entry.name, entry.prefab);
+            }
+        }
+
+        soundDictionary = new Dictionary<string, AudioClip>();
+        foreach (var entry in soundEffects)
+        {
+            if (!soundDictionary.ContainsKey(entry.name) && entry.clip != null)
+            {
+                soundDictionary.Add(entry.name, entry.clip);
+            }
+        }
+    }
+
+    public GameObject GetParticlePrefab(string name) =>
+        particleDictionary.TryGetValue(name, out var prefab) ? prefab : null;
+
+    public AudioClip GetSoundClip(string name) =>
+        soundDictionary.TryGetValue(name, out var clip) ? clip : null;
 }

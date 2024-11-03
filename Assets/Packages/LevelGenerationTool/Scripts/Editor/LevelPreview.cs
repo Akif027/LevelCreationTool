@@ -1,5 +1,7 @@
+using UnityEditor;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class LevelPreview
 {
@@ -32,6 +34,10 @@ public class LevelPreview
         if (questionTextUI != null)
         {
             questionTextUI.text = questionText;
+        }
+        else
+        {
+            Debug.LogWarning("No GameObject named 'Question' with a TextMeshProUGUI component found in the scene.");
         }
     }
 

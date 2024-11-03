@@ -1,8 +1,7 @@
-using TMPro;
 using UnityEditor;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class UIManager
 {
@@ -11,25 +10,56 @@ public class UIManager
 
     public void DrawLevelSettings(LevelData levelData)
     {
-        GUILayout.Label("Level Name", EditorStyles.boldLabel);
-        levelData.levelName = EditorGUILayout.TextField("Level Name", levelData.levelName);
+        GUILayout.Label("Level Settings", EditorStyles.boldLabel);
 
+        // Level Name
+        levelData.levelName = EditorGUILayout.TextField(
+            new GUIContent("Level Name", "Enter a unique name for this level."),
+            levelData.levelName
+        );
+
+        // Background Image
         GUILayout.Label("Background Image", EditorStyles.boldLabel);
-        levelData.backgroundImg = (Sprite)EditorGUILayout.ObjectField("Background Image", levelData.backgroundImg, typeof(Sprite), false);
+        levelData.backgroundImg = (Sprite)EditorGUILayout.ObjectField(
+            new GUIContent("Background Image", "Assign a background image for the level."),
+            levelData.backgroundImg,
+            typeof(Sprite),
+            false
+        );
 
         if (GUILayout.Button("Apply Background"))
         {
             ApplyBackground(levelData.backgroundImg);
         }
+        GUILayout.Space(10);
+        // Success Animations
+        GUILayout.Label("Settings", EditorStyles.boldLabel);
+        // Question Text
+        levelData.questionText = EditorGUILayout.TextField(
+            new GUIContent("Question Text", "Enter the question text for this level."),
+            levelData.questionText
+        );
 
-        GUILayout.Label("Question Text", EditorStyles.boldLabel);
-        levelData.questionText = EditorGUILayout.TextField("Question", levelData.questionText);
+        // Animated Scene Prefab
+        levelData.animatedScenePrefab = (GameObject)EditorGUILayout.ObjectField(
+            new GUIContent("Animated Scene Prefab", "Assign a prefab for the animated scene."),
+            levelData.animatedScenePrefab,
+            typeof(GameObject),
+            false
+        );
 
-        DrawAnimatedScene(levelData);
+
+        GUILayout.Space(10);
+        // Success Animations
+
         DrawSuccessAnimations(levelData);
+
+
+        // Word Management
         DrawWordManagement(levelData);
+
+        // Correct Words Management
         DrawCorrectWords(levelData);
-        DrawSuccessPrefab(levelData);
     }
 
     private void ApplyBackground(Sprite backgroundImg)
@@ -38,43 +68,31 @@ public class UIManager
 
         if (bgObject == null)
         {
-            bgObject = new GameObject("BackgroundImage") { tag = "Background" };
-            Canvas canvas = Object.FindFirstObjectByType<Canvas>();
-            if (canvas != null) bgObject.transform.SetParent(canvas.transform, false);
-
-            backgroundImgUI = bgObject.AddComponent<Image>();
-            RectTransform rectTransform = bgObject.GetComponent<RectTransform>();
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
+            Debug.LogWarning("No GameObject with tag 'Background' found in the scene. Background not applied.");
+            return;
         }
-        else
+
+        if (backgroundImgUI == null)
         {
             backgroundImgUI = bgObject.GetComponent<Image>();
+            if (backgroundImgUI == null)
+            {
+                backgroundImgUI = bgObject.AddComponent<Image>();
+            }
         }
 
-        if (backgroundImgUI != null && backgroundImg != null)
+        if (backgroundImg != null)
         {
             backgroundImgUI.sprite = backgroundImg;
         }
-    }
-
-    public void DrawAnimatedScene(LevelData levelData)
-    {
-        GUILayout.Label("Animated Scene Prefab", EditorStyles.boldLabel);
-        levelData.animatedScenePrefab = (GameObject)EditorGUILayout.ObjectField("Animated Scene Prefab", levelData.animatedScenePrefab, typeof(GameObject), false);
-    }
-
-    public void DrawSuccessAnimations(LevelData levelData)
-    {
-        GUILayout.Label("Success Animations", EditorStyles.boldLabel);
-        using (new EditorGUILayout.HorizontalScope())
+        else
         {
-            EditorGUILayout.LabelField("Animated Scene On Completion");
-            levelData.animatedSceneOnCompletion = EditorGUILayout.Toggle(levelData.animatedSceneOnCompletion);
+            Debug.LogWarning("Background image is null. Please assign a background image.");
         }
+    }
 
+    private void DrawSuccessAnimations(LevelData levelData)
+    {
         int animationCount = EditorGUILayout.IntField("Add Animation Clips", levelData.successAnimations.Length);
         if (animationCount != levelData.successAnimations.Length)
         {
@@ -83,15 +101,21 @@ public class UIManager
 
         for (int i = 0; i < animationCount; i++)
         {
-            levelData.successAnimations[i] = (AnimationClip)EditorGUILayout.ObjectField("Animation " + (i + 1), levelData.successAnimations[i], typeof(AnimationClip), false);
+            levelData.successAnimations[i] = (AnimationClip)EditorGUILayout.ObjectField(
+                new GUIContent("Animation " + (i + 1), "Select an animation clip to play upon level success."),
+                levelData.successAnimations[i],
+                typeof(AnimationClip),
+                false
+            );
         }
     }
 
     public void DrawWordManagement(LevelData levelData)
     {
+
         GUILayout.Label("Manage Words", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Add Word"))
+        if (GUILayout.Button("Add New Word"))
         {
             levelData.words.Add(string.Empty);
         }
@@ -99,11 +123,15 @@ public class UIManager
         for (int i = 0; i < levelData.words.Count; i++)
         {
             EditorGUILayout.BeginHorizontal();
-            levelData.words[i] = EditorGUILayout.TextField("Word", levelData.words[i]);
+            levelData.words[i] = EditorGUILayout.TextField(
+                new GUIContent("Word " + (i + 1), "Enter a word for this level."),
+                levelData.words[i]
+            );
 
             if (GUILayout.Button("Delete", GUILayout.Width(60)))
             {
                 levelData.words.RemoveAt(i);
+                break;  // Exit loop to prevent index errors after deletion
             }
 
             EditorGUILayout.EndHorizontal();
@@ -122,21 +150,18 @@ public class UIManager
         for (int i = 0; i < levelData.correctWords.Count; i++)
         {
             EditorGUILayout.BeginHorizontal();
-            levelData.correctWords[i] = EditorGUILayout.TextField("Correct Word", levelData.correctWords[i]);
+            levelData.correctWords[i] = EditorGUILayout.TextField(
+                new GUIContent("Correct Word " + (i + 1), "Enter a correct word for this level."),
+                levelData.correctWords[i]
+            );
 
             if (GUILayout.Button("Delete", GUILayout.Width(60)))
             {
                 levelData.correctWords.RemoveAt(i);
+                break;  // Exit loop to prevent index errors after deletion
             }
 
             EditorGUILayout.EndHorizontal();
         }
-    }
-
-    public void DrawSuccessPrefab(LevelData levelData)
-    {
-        GUILayout.Label("Success Prefab and Position", EditorStyles.boldLabel);
-        levelData.successPrefab = (GameObject)EditorGUILayout.ObjectField("Success Prefab", levelData.successPrefab, typeof(GameObject), false);
-
     }
 }
