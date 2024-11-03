@@ -1,16 +1,16 @@
+using LevelEditorPlugin.Runtime;
+using UnityEditor;
+using UnityEngine;
+
 namespace LevelEditorPlugin.Editor
 {
-    using UnityEditor;
-    using UnityEngine;
-    using LevelEditorPlugin.Runtime;
-
     public class EnvironmentUIController
     {
-        private EnvironmentManager environmentManager;
+        private readonly EnvironmentManager environmentManager;
 
-        public EnvironmentUIController(EnvironmentManager environmentManager)
+        public EnvironmentUIController(EnvironmentManager manager)
         {
-            this.environmentManager = environmentManager;
+            environmentManager = manager;
         }
 
         public void DrawEnvironmentUI(LevelData levelData)
@@ -27,16 +27,14 @@ namespace LevelEditorPlugin.Editor
 
                 EditorGUILayout.BeginHorizontal();
 
-                // Button to add environment object
                 if (GUILayout.Button($"Add {environment.environmentName}"))
                 {
-                    environmentManager.InstantiateEnvironment(environment, Vector3.zero);
+                    environmentManager.InstantiateEnvironment(environment, levelData);
                 }
 
-                // Button to replace the selected object with the chosen environment object
                 if (Selection.activeGameObject != null && GUILayout.Button($"Replace with {environment.environmentName}"))
                 {
-                    environmentManager.ReplaceEnvironment(Selection.activeGameObject, environment);
+                    environmentManager.ReplaceEnvironment(Selection.activeGameObject, environment, levelData);
                 }
 
                 EditorGUILayout.EndHorizontal();
@@ -44,16 +42,14 @@ namespace LevelEditorPlugin.Editor
 
             GUILayout.Space(10);
 
-            // Button to delete the selected environment object
             if (GUILayout.Button("Delete Selected Environment") && Selection.activeGameObject != null)
             {
-                environmentManager.DeleteEnvironment(Selection.activeGameObject);
+                environmentManager.DeleteEnvironment(Selection.activeGameObject, levelData);
             }
 
-            // Button to delete all environment objects in the scene
             if (GUILayout.Button("Delete All Environments"))
             {
-                environmentManager.DeleteAllEnvironments();
+                environmentManager.DeleteAllEnvironments(levelData);
             }
         }
     }
