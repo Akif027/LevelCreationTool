@@ -1,30 +1,33 @@
-namespace LevelEditorPlugin.Runtime
+using System.Collections.Generic;
+
+public class GameModel
 {
-    using System.Collections.Generic;
+    private HashSet<string> correctWords;
+    private HashSet<string> selectedWords;
 
-    public class GameModel
+    public GameModel(List<string> correctWordsList)
     {
-        public HashSet<string> SelectedCorrectWords { get; private set; } = new HashSet<string>();
-        public HashSet<string> RequiredCorrectWords { get; private set; }
+        correctWords = new HashSet<string>(correctWordsList, System.StringComparer.OrdinalIgnoreCase); // Case-insensitive
+        selectedWords = new HashSet<string>();
+    }
 
-        public GameModel(List<string> correctWords)
-        {
-            RequiredCorrectWords = new HashSet<string>(correctWords);
-        }
+    public bool IsWordCorrect(string word)
+    {
+        return correctWords.Contains(word);
+    }
 
-        public bool IsWordCorrect(string word)
+    public bool AddSelectedWord(string word)
+    {
+        if (correctWords.Contains(word) && !selectedWords.Contains(word))
         {
-            return RequiredCorrectWords.Contains(word);
+            selectedWords.Add(word);
+            return true;
         }
+        return false;
+    }
 
-        public bool AddSelectedWord(string word)
-        {
-            return SelectedCorrectWords.Add(word);
-        }
-
-        public bool AllWordsSelected()
-        {
-            return SelectedCorrectWords.Count == RequiredCorrectWords.Count;
-        }
+    public bool AllWordsSelected()
+    {
+        return selectedWords.Count == correctWords.Count;
     }
 }

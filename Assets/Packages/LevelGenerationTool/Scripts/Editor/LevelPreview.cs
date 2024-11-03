@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using TMPro;
 using LevelEditorPlugin.Runtime;
+using System.Collections.Generic;
 
 namespace LevelEditorPlugin.Editor
 {
@@ -52,11 +53,26 @@ namespace LevelEditorPlugin.Editor
                 return;
             }
 
-            // Clear existing child objects in Wordset
+            // Clear existing child objects in Wordset by collecting them first
+            List<GameObject> children = new List<GameObject>();
             foreach (Transform child in wordSetParent)
             {
-                Object.DestroyImmediate(child.gameObject);
+                children.Add(child.gameObject);
             }
+
+#if UNITY_EDITOR
+            // In Editor mode
+            foreach (GameObject child in children)
+            {
+                Undo.DestroyObjectImmediate(child);
+            }
+#else
+    // In Play mode
+    foreach (GameObject child in children)
+    {
+        Destroy(child);
+    }
+#endif
 
             // Instantiate each word as a UI button
             foreach (string word in levelData.words)
@@ -70,19 +86,23 @@ namespace LevelEditorPlugin.Editor
             }
         }
 
+
         private void InstantiateAnimatedScene(LevelData levelData)
         {
+            // Check if an object named "AnimatedScenePreview" already exists in the scene
+            animatedSceneInstance = GameObject.Find("AnimatedScenePreview");
+
+            if (animatedSceneInstance != null)
+            {
+                Debug.Log("AnimatedScenePreview already exists in the scene. Skipping instantiation.");
+                return;
+            }
+
             if (levelData.animatedScenePrefab != null)
             {
-                // Destroy any existing instance to prevent duplicates
-                if (animatedSceneInstance != null)
-                {
-                    Object.DestroyImmediate(animatedSceneInstance);
-                }
-
                 // Instantiate the animated scene prefab
                 animatedSceneInstance = Object.Instantiate(levelData.animatedScenePrefab);
-                animatedSceneInstance.name = "AnimatedScenePreview";  // Rename for clarity in hierarchy
+                animatedSceneInstance.name = "AnimatedScenePreview";  // Rename for clarity in the hierarchy
 
                 // Position it within the scene if needed
                 animatedSceneInstance.transform.position = Vector3.zero;
@@ -92,5 +112,6 @@ namespace LevelEditorPlugin.Editor
                 Debug.LogWarning("No Animated Scene Prefab assigned in LevelData.");
             }
         }
+
     }
 }

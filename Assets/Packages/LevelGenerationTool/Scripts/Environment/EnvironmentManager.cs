@@ -15,8 +15,9 @@ namespace LevelEditorPlugin.Runtime
         public void InstantiateEnvironment(EnvironmentData environmentData, LevelData levelData)
         {
             Vector3 position = environmentModel.GetSceneCenterInWorld();
-            GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(environmentData.prefab);
+            position.z = 0;  // Ensure the z position is set to 0
 
+            GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(environmentData.prefab);
             if (instance != null)
             {
                 instance.transform.position = position;
@@ -31,6 +32,7 @@ namespace LevelEditorPlugin.Runtime
                 });
             }
         }
+
 
         public void ReplaceEnvironment(GameObject oldEnvironment, EnvironmentData newEnvironmentData, LevelData levelData)
         {

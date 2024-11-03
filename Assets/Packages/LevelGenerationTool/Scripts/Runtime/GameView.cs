@@ -4,12 +4,13 @@ namespace LevelEditorPlugin.Runtime
     using UnityEngine.UI;
     using TMPro;
     using System.Collections;
+    using UnityEngine.SceneManagement;
 
     public class GameView : MonoBehaviour
     {
         [SerializeField] private Transform wordSetParent;
-
         public Transform WordSetParent => wordSetParent;
+
         [SerializeField] private GameObject levelUI;
         [SerializeField] private Button nextLevelButton;
         [SerializeField] private TextMeshProUGUI questionText;
@@ -35,7 +36,9 @@ namespace LevelEditorPlugin.Runtime
                     wordText.text = word;
                 }
             }
+
             nextLevelButton.gameObject.SetActive(false);
+            nextLevelButton.onClick.AddListener(LoadNextLevel); // Add the listener for the next level button
             levelUI.SetActive(true);
         }
 
@@ -66,6 +69,17 @@ namespace LevelEditorPlugin.Runtime
             }
             button.transform.position = originalPosition;
         }
+        public void PlayEffect(GameObject particlePrefab, Vector3 position)
+        {
+            if (particlePrefab != null)
+            {
+                Instantiate(particlePrefab, position, Quaternion.identity);
+            }
+            else
+            {
+                Debug.LogWarning("Particle prefab is not assigned.");
+            }
+        }
 
         // Shows the level completion UI
         public void ShowLevelCompleteUI()
@@ -73,5 +87,25 @@ namespace LevelEditorPlugin.Runtime
             levelUI.SetActive(false);
             nextLevelButton.gameObject.SetActive(true);
         }
+
+        // Method to load the next level
+
+        private void LoadNextLevel()
+        {
+            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+            int nextSceneIndex = currentSceneIndex + 1;
+
+            // Check if there's a next level
+            if (nextSceneIndex < SceneManager.sceneCountInBuildSettings)
+            {
+                SceneManager.LoadScene(nextSceneIndex);
+            }
+            else
+            {
+
+                Debug.LogWarning("No more levels available. You have completed all levels.");
+            }
+        }
+
     }
 }

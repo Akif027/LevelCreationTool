@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using LevelEditorPlugin.Runtime;
+using System.Collections.Generic;
 
 namespace LevelEditorPlugin.Editor
 {
@@ -26,7 +27,6 @@ namespace LevelEditorPlugin.Editor
 
         private void OnEnable()
         {
-            // Initialize controllers and managers
             levelController = new LevelController();
             var environmentModel = new EnvironmentModel();
             var environmentManager = new EnvironmentManager(environmentModel);
@@ -39,28 +39,28 @@ namespace LevelEditorPlugin.Editor
         {
             GUILayout.Label("Level Editor", EditorStyles.boldLabel);
 
-            // Button to create a new level
             if (GUILayout.Button("Create New Level"))
             {
                 CreateNewLevelData();
             }
 
-            // Field to select an existing LevelData asset
             currentLevelData = (LevelData)EditorGUILayout.ObjectField("Level Data", currentLevelData, typeof(LevelData), false);
 
             if (currentLevelData != null)
             {
-                // Initialize SerializedObject for LevelData
                 serializedLevelData = new SerializedObject(currentLevelData);
                 scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
                 DrawSections();
                 EditorGUILayout.EndScrollView();
 
-                // Save button
                 if (GUILayout.Button("Save Level Settings"))
                 {
                     SaveLevelData();
                 }
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("Select or create a LevelData asset to edit.", MessageType.Info);
             }
         }
 
@@ -68,31 +68,34 @@ namespace LevelEditorPlugin.Editor
         {
             serializedLevelData.Update();
 
-            // Draw Level Settings Section
+            EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Level Settings", EditorStyles.boldLabel);
             uiManager.DrawLevelSettings(currentLevelData);
+            EditorGUILayout.EndVertical();
 
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
 
-            // Draw Environment Management Section
+            EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Environment Management", EditorStyles.boldLabel);
             environmentUIController.DrawEnvironmentUI(currentLevelData);
+            EditorGUILayout.EndVertical();
 
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
 
-            // Draw Particle System Prefabs Section
+            EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Particle System Prefabs", EditorStyles.boldLabel);
             uiManager.DrawParticlePrefabsList(currentLevelData);
+            EditorGUILayout.EndVertical();
 
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
 
-            // Draw Sound Effects Section
+            EditorGUILayout.BeginVertical("box");
             GUILayout.Label("Sound Effects", EditorStyles.boldLabel);
             uiManager.DrawSoundEffectsList(currentLevelData);
+            EditorGUILayout.EndVertical();
 
-            GUILayout.Space(10);
+            EditorGUILayout.Space();
 
-            // Draw Preview Button
             levelPreview.DrawPreviewButton(currentLevelData);
 
             serializedLevelData.ApplyModifiedProperties();
@@ -104,12 +107,14 @@ namespace LevelEditorPlugin.Editor
             if (!string.IsNullOrEmpty(path))
             {
                 LevelData newLevelData = ScriptableObject.CreateInstance<LevelData>();
+
+                InitializeLevelData(newLevelData);
+
                 AssetDatabase.CreateAsset(newLevelData, path);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
 
                 currentLevelData = AssetDatabase.LoadAssetAtPath<LevelData>(path);
-                serializedLevelData = new SerializedObject(currentLevelData);
                 Repaint();
 
                 Debug.Log("New LevelData asset created at: " + path);
@@ -118,6 +123,19 @@ namespace LevelEditorPlugin.Editor
             {
                 Debug.LogWarning("No path specified. Level creation cancelled.");
             }
+        }
+
+        private void InitializeLevelData(LevelData levelData)
+        {
+            levelData.levelName = "New Level";
+            levelData.successAnimations = new AnimationClip[0];
+            levelData.words = new List<string>();
+            levelData.correctWords = new List<string>();
+            levelData.environmentOptions = new EnvironmentData[0];
+            levelData.placedEnvironments = new List<LevelData.PlacedEnvironment>();
+            levelData.particlePrefabs = new List<LevelData.ParticleEntry>();
+            levelData.soundEffects = new List<LevelData.SoundEntry>();
+            levelData.animatedSceneOnCompletion = true; // Set default for animated scene toggle
         }
 
         private void SaveLevelData()

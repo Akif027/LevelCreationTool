@@ -39,6 +39,13 @@ namespace LevelEditorPlugin.Editor
             // Animated Scene Prefab
             levelData.animatedScenePrefab = (GameObject)EditorGUILayout.ObjectField("Animated Scene Prefab", levelData.animatedScenePrefab, typeof(GameObject), false);
 
+            // Toggle for Animated Scene on Completion
+            levelData.animatedSceneOnCompletion = EditorGUILayout.Toggle(
+                new GUIContent("Animated Scene On Completion", "Enable or disable the animated scene upon level completion"),
+                levelData.animatedSceneOnCompletion
+            );
+
+
             GUILayout.Space(10);
 
             // Success Animations
@@ -79,10 +86,15 @@ namespace LevelEditorPlugin.Editor
                 Debug.LogWarning("Background image is null. Please assign a background image.");
             }
         }
-
-        private void DrawSuccessAnimations(LevelData levelData)
+        public void DrawSuccessAnimations(LevelData levelData)
         {
             GUILayout.Label("Success Animations", EditorStyles.boldLabel);
+
+            if (levelData.successAnimations == null)
+            {
+                levelData.successAnimations = new AnimationClip[0]; // Initialize if null
+            }
+
             int animationCount = EditorGUILayout.IntField("Add Animation Clips", levelData.successAnimations.Length);
             if (animationCount != levelData.successAnimations.Length)
             {
@@ -91,9 +103,15 @@ namespace LevelEditorPlugin.Editor
 
             for (int i = 0; i < animationCount; i++)
             {
-                levelData.successAnimations[i] = (AnimationClip)EditorGUILayout.ObjectField($"Animation {i + 1}", levelData.successAnimations[i], typeof(AnimationClip), false);
+                levelData.successAnimations[i] = (AnimationClip)EditorGUILayout.ObjectField(
+                    new GUIContent($"Animation {i + 1}", "Select an animation clip to play upon level success."),
+                    levelData.successAnimations[i],
+                    typeof(AnimationClip),
+                    false
+                );
             }
         }
+
 
         private void DrawWordManagement(LevelData levelData)
         {

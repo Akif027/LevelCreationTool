@@ -3,34 +3,62 @@ namespace LevelEditorPlugin.Runtime
     using UnityEngine;
     using UnityEngine.UI;
     using TMPro;
+    using System.Linq;
 
     public class GameController : MonoBehaviour
     {
+        [SerializeField] private int level = 1;
         [SerializeField] private GameView gameView;
-        [SerializeField] private LevelData levelData;
+        [SerializeField] private GameObject animatedSceneInstance;
+        private LevelData levelData;
         private GameModel gameModel;
 
         private void Start()
         {
+            LoadLevelData();
             InitializeGame(levelData);
             EventManager.OnAllCorrectWordsSelected += OnLevelComplete;
             EventManager.OnCorrectWordSelected += PlayCorrectSound;
             EventManager.OnIncorrectWordSelected += PlayIncorrectSound;
+
+            animatedSceneInstance = GameObject.Find("AnimatedScenePreview");
+
+            if (animatedSceneInstance == null)
+            {
+                Debug.LogWarning("Animated scene instance not found in the hierarchy.");
+            }
+        }
+
+        private void LoadLevelData()
+        {
+            int targetLevelIndex = level;
+            LevelData[] allLevels = Resources.LoadAll<LevelData>("");
+            levelData = allLevels.FirstOrDefault(level => level.levelNum == targetLevelIndex);
+
+            if (levelData == null)
+            {
+                Debug.LogError($"LevelData with levelNum {targetLevelIndex} could not be found in the Resources folder.");
+            }
         }
 
         private void InitializeGame(LevelData levelData)
         {
+            if (levelData == null)
+            {
+                Debug.LogError("LevelData is not loaded. Initialization aborted.");
+                return;
+            }
+
             gameModel = new GameModel(levelData.correctWords);
             gameView.SetupUI(levelData);
 
-            // Loop through each word button in the word set parent
-            foreach (Transform child in gameView.WordSetParent) // Using the public property here
+            foreach (Transform child in gameView.WordSetParent)
             {
                 Button button = child.GetComponent<Button>();
                 TextMeshProUGUI wordText = child.GetComponentInChildren<TextMeshProUGUI>();
                 if (button != null && wordText != null)
                 {
-                    string word = wordText.text;
+                    string word = wordText.text.Trim();
                     button.onClick.AddListener(() => OnWordSelected(word, button));
                 }
             }
@@ -43,6 +71,18 @@ namespace LevelEditorPlugin.Runtime
                 if (gameModel.AddSelectedWord(word))
                 {
                     gameView.ShowCorrectWord(button);
+
+                    // Play particle effect for correct word
+                    GameObject particlePrefab = levelData.GetParticlePrefab("Pop");
+                    if (particlePrefab != null)
+                    {
+                        gameView.PlayEffect(particlePrefab, button.transform.position);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Pop particle effect not found in LevelData.");
+                    }
+
                     EventManager.TriggerCorrectWordSelected();
                 }
 
@@ -61,6 +101,14 @@ namespace LevelEditorPlugin.Runtime
         private void OnLevelComplete()
         {
             gameView.ShowLevelCompleteUI();
+            if (animatedSceneInstance != null)
+            {
+                animatedSceneInstance.SetActive(levelData.animatedSceneOnCompletion);
+            }
+            else
+            {
+                Debug.LogWarning("AnimatedSceneInstance is not assigned in GameController.");
+            }
         }
 
         private void PlayCorrectSound()

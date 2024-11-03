@@ -13,12 +13,27 @@ namespace LevelEditorPlugin.Runtime
 
         private void OnEnable()
         {
-            EventManager.OnAllCorrectWordsSelected += characterMovement.StartMoving;
+            // Directly add listener without null check
+            EventManager.OnAllCorrectWordsSelected += StartMoving;
         }
 
         private void OnDisable()
         {
-            EventManager.OnAllCorrectWordsSelected -= characterMovement.StartMoving;
+            // Directly remove listener without null check
+            EventManager.OnAllCorrectWordsSelected -= StartMoving;
+        }
+
+        // This method is called when all correct words are selected
+        private void StartMoving()
+        {
+            if (characterMovement != null)
+            {
+                characterMovement.StartMoving(); // Assuming CharacterMovement has a StartMoving method
+            }
+            else
+            {
+                Debug.LogWarning("CharacterMovement component is missing on this GameObject.");
+            }
         }
     }
 }
