@@ -74,7 +74,7 @@ namespace LevelEditorPlugin.Runtime
 #if UNITY_6_0_OR_NEWER
     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
 #else
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
+            rb.velocity = new Vector2(rb.velocity.x, jumpVelocity);
 #endif
         }
         private void Jump()

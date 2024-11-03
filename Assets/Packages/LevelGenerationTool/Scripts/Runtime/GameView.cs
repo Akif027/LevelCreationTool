@@ -73,7 +73,8 @@ namespace LevelEditorPlugin.Runtime
         {
             if (particlePrefab != null)
             {
-                Instantiate(particlePrefab, position, Quaternion.identity);
+                GameObject particleprefab = Instantiate(particlePrefab, position, Quaternion.identity);
+                Destroy(particleprefab, 1);
             }
             else
             {

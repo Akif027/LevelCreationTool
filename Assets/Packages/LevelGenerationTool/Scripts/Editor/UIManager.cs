@@ -2,6 +2,8 @@ using UnityEditor;
 using UnityEngine;
 using LevelEditorPlugin.Runtime;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LevelEditorPlugin.Editor
 {
@@ -112,8 +114,7 @@ namespace LevelEditorPlugin.Editor
             }
         }
 
-
-        private void DrawWordManagement(LevelData levelData)
+        public void DrawWordManagement(LevelData levelData)
         {
             GUILayout.Label("Manage Words", EditorStyles.boldLabel);
 
@@ -122,20 +123,33 @@ namespace LevelEditorPlugin.Editor
                 levelData.words.Add(string.Empty);
             }
 
+            // Temporary list to store indices of items to delete
+            List<int> indicesToRemove = new List<int>();
+
             for (int i = 0; i < levelData.words.Count; i++)
             {
                 EditorGUILayout.BeginHorizontal();
-                levelData.words[i] = EditorGUILayout.TextField($"Word {i + 1}", levelData.words[i]);
+
+                levelData.words[i] = EditorGUILayout.TextField(
+                    new GUIContent($"Word {i + 1}", "Enter a word for this level."),
+                    levelData.words[i]
+                );
 
                 if (GUILayout.Button("Delete", GUILayout.Width(60)))
                 {
-                    levelData.words.RemoveAt(i);
-                    break;
+                    indicesToRemove.Add(i);  // Mark for deletion
                 }
 
                 EditorGUILayout.EndHorizontal();
             }
+
+            // Remove items after the loop
+            foreach (int index in indicesToRemove.OrderByDescending(i => i))
+            {
+                levelData.words.RemoveAt(index);
+            }
         }
+
 
         private void DrawCorrectWords(LevelData levelData)
         {
@@ -146,6 +160,9 @@ namespace LevelEditorPlugin.Editor
                 levelData.correctWords.Add(string.Empty);
             }
 
+            // List to store indices of items to remove
+            List<int> indicesToRemove = new List<int>();
+
             for (int i = 0; i < levelData.correctWords.Count; i++)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -153,13 +170,20 @@ namespace LevelEditorPlugin.Editor
 
                 if (GUILayout.Button("Delete", GUILayout.Width(60)))
                 {
-                    levelData.correctWords.RemoveAt(i);
-                    break;
+                    indicesToRemove.Add(i);  // Mark for deletion
                 }
 
                 EditorGUILayout.EndHorizontal();
             }
+
+            // Remove marked items after the loop
+            foreach (int index in indicesToRemove.OrderByDescending(i => i))
+            {
+                levelData.correctWords.RemoveAt(index);
+            }
         }
+
+
 
         public void DrawParticlePrefabsList(LevelData levelData)
         {
