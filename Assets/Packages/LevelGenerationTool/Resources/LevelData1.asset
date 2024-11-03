@@ -17,13 +17,13 @@ MonoBehaviour:
   backgroundImg: {fileID: -4364034832326165938, guid: 83c49b38227a79345a3a1b794a2c2831, type: 3}
   questionText: Which of these are types of fruit?
   words:
-  - 'Apple '
-  - Carrot
+  - Tulip
+  - 'Mango '
   - 'Banana '
   - Rose
   - 'Grape '
-  - Tulip
-  - 'Mango '
+  - Apple
+  - Carrot
   - Potato
   correctWords:
   - Apple

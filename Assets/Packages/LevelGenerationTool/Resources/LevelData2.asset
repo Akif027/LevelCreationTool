@@ -19,12 +19,12 @@ MonoBehaviour:
   words:
   - 'Eagle '
   - Elephant
-  - 'Parrot '
+  - Lion
   - Tiger
   - 'Butterfly '
-  - Lion
-  - 'Sparrow '
+  - Parrot
   - Crocodile
+  - Sparrow
   correctWords:
   - Eagle
   - Parrot

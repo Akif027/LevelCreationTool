@@ -2,7 +2,7 @@ namespace LevelEditorPlugin.Runtime
 {
     using UnityEngine;
 
-    public class CharacterController : MonoBehaviour
+    public class Character_Controller : MonoBehaviour
     {
         private CharacterMovement characterMovement;
 

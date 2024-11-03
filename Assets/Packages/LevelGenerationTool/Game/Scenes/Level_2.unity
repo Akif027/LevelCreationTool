@@ -7412,7 +7412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   movementDistance: 20
-  bufferHeight: 1
+  bufferHeight: 0.6
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64

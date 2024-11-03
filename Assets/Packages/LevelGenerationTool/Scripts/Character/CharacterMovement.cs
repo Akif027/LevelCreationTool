@@ -70,9 +70,13 @@ namespace LevelEditorPlugin.Runtime
         private void CalculateJumpForce(float jumpHeight)
         {
             float jumpVelocity = Mathf.Sqrt(2 * Gravity * jumpHeight);
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
-        }
 
+#if UNITY_6_0_OR_NEWER
+    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
+#else
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
+#endif
+        }
         private void Jump()
         {
             if (isJumping) return;
