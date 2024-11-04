@@ -1,8 +1,8 @@
 using UnityEditor;
 using UnityEngine;
-using TMPro;
 using LevelEditorPlugin.Runtime;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace LevelEditorPlugin.Editor
 {
@@ -33,7 +33,7 @@ namespace LevelEditorPlugin.Editor
 
         private void ApplyQuestionText(string questionText)
         {
-            var questionTextUI = GameObject.Find("Question")?.GetComponent<TextMeshProUGUI>();
+            var questionTextUI = GameObject.Find("Question")?.GetComponent<Text>();
             if (questionTextUI != null)
             {
                 questionTextUI.text = questionText;
@@ -78,7 +78,7 @@ namespace LevelEditorPlugin.Editor
             foreach (string word in levelData.words)
             {
                 GameObject wordInstance = Object.Instantiate(levelData.wordButtonPrefab, wordSetParent);
-                var wordText = wordInstance.GetComponentInChildren<TextMeshProUGUI>();
+                var wordText = wordInstance.GetComponentInChildren<Text>();
                 if (wordText != null)
                 {
                     wordText.text = word;
