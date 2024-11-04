@@ -1,5 +1,5 @@
 {
-  "name": "com.yourcompany.leveleditortool",
+  "name": "com.codeforlife.levelgenerationtool",
   "displayName": "Level Editor Tool",
   "version": "1.0.0",
   "unity": "2020.3",
@@ -7,7 +7,7 @@
   "keywords": ["Unity", "Level Editor", "Environment", "Tool"],
   "author": {
     "name": "Codeforlife",
-    "email": "Shaikhakif8149@gmail.com",
+    "email": "shaikhakif8149@gmail.com",
     "url": "https://yourcompany.com"
   },
   "dependencies": {}
