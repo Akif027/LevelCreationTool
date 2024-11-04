@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CFX3_T_CircleSoft_0: -1521324569291767399
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

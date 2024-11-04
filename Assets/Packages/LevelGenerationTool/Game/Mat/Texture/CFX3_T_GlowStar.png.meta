@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CFX3_T_GlowStar_0: 4379696787091424995
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
