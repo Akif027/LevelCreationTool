@@ -1,6 +1,6 @@
 using UnityEditor;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 using LevelEditorPlugin.Runtime;
 using System.Collections.Generic;
 
@@ -33,14 +33,14 @@ namespace LevelEditorPlugin.Editor
 
         private void ApplyQuestionText(string questionText)
         {
-            var questionTextUI = GameObject.Find("Question")?.GetComponent<TextMeshProUGUI>();
+            var questionTextUI = GameObject.Find("Question")?.GetComponent<Text>();
             if (questionTextUI != null)
             {
                 questionTextUI.text = questionText;
             }
             else
             {
-                Debug.LogWarning("No GameObject named 'Question' with a TextMeshProUGUI component found in the scene.");
+                Debug.LogWarning("No GameObject named 'Question' with a Text component found in the scene.");
             }
         }
 
@@ -67,18 +67,18 @@ namespace LevelEditorPlugin.Editor
                 Undo.DestroyObjectImmediate(child);
             }
 #else
-    // In Play mode
-    foreach (GameObject child in children)
-    {
-        Destroy(child);
-    }
+            // In Play mode
+            foreach (GameObject child in children)
+            {
+                Destroy(child);
+            }
 #endif
 
             // Instantiate each word as a UI button
             foreach (string word in levelData.words)
             {
                 GameObject wordInstance = Object.Instantiate(levelData.wordButtonPrefab, wordSetParent);
-                var wordText = wordInstance.GetComponentInChildren<TextMeshProUGUI>();
+                var wordText = wordInstance.GetComponentInChildren<Text>();
                 if (wordText != null)
                 {
                     wordText.text = word;

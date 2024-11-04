@@ -2,7 +2,6 @@ namespace LevelEditorPlugin.Runtime
 {
     using UnityEngine;
     using UnityEngine.UI;
-    using TMPro;
     using System.Linq;
 
     public class GameController : MonoBehaviour
@@ -55,7 +54,7 @@ namespace LevelEditorPlugin.Runtime
             foreach (Transform child in gameView.WordSetParent)
             {
                 Button button = child.GetComponent<Button>();
-                TextMeshProUGUI wordText = child.GetComponentInChildren<TextMeshProUGUI>();
+                Text wordText = child.GetComponentInChildren<Text>();
                 if (button != null && wordText != null)
                 {
                     string word = wordText.text.Trim();

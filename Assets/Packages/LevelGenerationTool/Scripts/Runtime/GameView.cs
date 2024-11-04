@@ -2,7 +2,6 @@ namespace LevelEditorPlugin.Runtime
 {
     using UnityEngine;
     using UnityEngine.UI;
-    using TMPro;
     using System.Collections;
     using UnityEngine.SceneManagement;
 
@@ -13,7 +12,7 @@ namespace LevelEditorPlugin.Runtime
 
         [SerializeField] private GameObject levelUI;
         [SerializeField] private Button nextLevelButton;
-        [SerializeField] private TextMeshProUGUI questionText;
+        [SerializeField] private Text questionText;
 
         // Initialize word buttons and other UI elements based on the provided LevelData
         public void SetupUI(LevelData levelData)
@@ -30,7 +29,7 @@ namespace LevelEditorPlugin.Runtime
             foreach (string word in levelData.words)
             {
                 GameObject wordButtonObj = Instantiate(levelData.wordButtonPrefab, wordSetParent);
-                var wordText = wordButtonObj.GetComponentInChildren<TextMeshProUGUI>();
+                var wordText = wordButtonObj.GetComponentInChildren<Text>();
                 if (wordText != null)
                 {
                     wordText.text = word;
