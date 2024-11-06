@@ -9,7 +9,7 @@ namespace LevelEditorPlugin.Runtime
         [SerializeField] private int level = 1;
         [SerializeField] private GameView gameView;
         [SerializeField] private GameObject animatedSceneInstance;
-        private LevelData levelData;
+        [SerializeField] LevelData levelData;
         private GameModel gameModel;
 
         private void Start()
